@@ -195,183 +195,6 @@ void load_led_on_offs(long floor_sel){
 	digitalWrite(BLANK,LOW);
 }
 
-
-/*
-void teq_hartutjun(){
-	for (int j=0; j<24; j++){
-		if (cntr_dir)
-		if (cntr==12){
-			cntr--;
-			cntr_dir = 0;
-		} else cntr++;
-		else
-		if (cntr==0){
-			cntr++;
-			cntr_dir = 1;
-		} else cntr--;
-		long color = BLACK;
-		if(cntr == 0) color = RED;
-		if(cntr == 1) color = YELLOW;
-		if(cntr == 2) color = GREEN;
-		if(cntr == 3) color = CYAN;
-		if(cntr == 4) color = MAGENTA;
-		if(cntr == 5) color = BLUE;
-		if(cntr == 6) color = RED;
-		if(cntr == 7) color = YELLOW;
-		if(cntr == 8) color = GREEN;
-		if(cntr == 9) color = CYAN;
-		if(cntr == 10) color = MAGENTA;
-		if(cntr == 11) color = BLUE;
-		if(cntr == 12) color = RED;
-		for (int z=0; z<5; z++){
-			for (int y=0; y<5; y++){
-				for (int x=0; x<5; x++){
-					led_matrix[z][y][x] = BLACK;
-					if ((x+y+z) == cntr)
-					led_matrix[z][y][x] = color;
-				}
-			}
-		}
-		for (int i =0; i<100; i++){
-			load_led_on_offs(floor_sel);
-			delay_ms(1);
-			if (bitRead(floor_sel, 4))
-				floor_sel = 1;
-			else
-				floor_sel = floor_sel << 1;
-		}
-	}
-}
-
-void vert_hartutyun(){
-	for (int j=0; j<16; j++){
-		if (cntr_dir)
-			if (cntr==8){
-				cntr--;
-				cntr_dir = 0;
-			} else cntr++;
-		else if (cntr==0){
-			cntr++;
-			cntr_dir = 1;
-		} else cntr--;
-		long color = BLACK;
-		if(cntr == 0) color = RED;
-		if(cntr == 1) color = YELLOW;
-		if(cntr == 2) color = GREEN;
-		if(cntr == 3) color = CYAN;
-		if(cntr == 4) color = MAGENTA;
-		if(cntr == 5) color = BLUE;
-		if(cntr == 6) color = RED;
-		if(cntr == 7) color = YELLOW;
-		if(cntr == 8) color = GREEN;
-		for (int z=0; z<5; z++){
-			for (int y=0; y<5; y++){
-				for (int x=0; x<5; x++){
-					led_matrix[z][y][x] = BLACK;
-					if ((x+y) == cntr)
-					led_matrix[z][y][x] = color;
-				}
-			}
-		}
-		for (int i =0; i<100; i++){
-			load_led_on_offs(floor_sel);
-			delay_ms(1);
-			if (bitRead(floor_sel, 4))
-				floor_sel = 1;
-			else
-				floor_sel = floor_sel << 1;
-		}
-	}
-}
-
-void cube_verev_vazox(){
-	for (int j=0; j<40; j++){
-		if (cntr_dir)
-		if (cntr==4){
-			cntr--;
-			cntr_dir = 0;
-		} else cntr++;
-		else if (cntr==0){
-			cntr++;
-			cntr_dir = 1;
-		} else cntr--;
-		long color = BLACK;
-		if(cntr == 0) color = RED;
-		if(cntr == 1) color = YELLOW;
-		if(cntr == 2) color = GREEN;
-		if(cntr == 3) color = BLUE;
-		if(cntr == 4) color = CYAN;
-		for (int z=0; z<5; z++){
-			for (int y=0; y<5; y++){
-				for (int x=0; x<5; x++){
-					led_matrix[z][y][x] = BLACK;
-					if ((x <= cntr) && (y <= cntr) && (z <= cntr))
-					led_matrix[z][y][x] = color;
-				}
-			}
-		}
-		for (int i =0; i<100; i++){
-			load_led_on_offs(floor_sel);
-			delay_ms(1);
-			if (bitRead(floor_sel, 4))
-				floor_sel = 1;
-			else
-				floor_sel = floor_sel << 1;
-		}
-	}
-}
-
-void cube_vazox(){
-	for (int j=0; j<72; j++){
-		if (cntr_dir)
-		if (cntr==9){
-			cntr--;
-			cntr_dir = 0;
-		} else cntr++;
-		else if (cntr==0){
-			cntr++;
-			cntr_dir = 1;
-		} else cntr--;
-		long color = BLACK;
-		if(cntr == 0) color = RED;
-		if(cntr == 1) color = YELLOW;
-		if(cntr == 2) color = GREEN;
-		if(cntr == 3) color = BLUE;
-		if(cntr == 4) color = CYAN;
-		if(cntr == 5) color = RED;
-		if(cntr == 6) color = YELLOW;
-		if(cntr == 7) color = GREEN;
-		if(cntr == 8) color = BLUE;
-		if(cntr == 9) color = CYAN;
-		for (int z=0; z<5; z++){
-			for (int y=0; y<5; y++){
-				for (int x=0; x<5; x++){
-					led_matrix[z][y][x] = BLACK;
-					if(cntr >= 5) {
-						if((x >= (cntr-5)) && (y >= (cntr-5)) && (z >= (cntr-5))) {
-							led_matrix[z][y][x] = color;
-						}
-						} else {
-						if((x <= cntr) && (y <= cntr) && (z <= cntr)) {
-							led_matrix[z][y][x] = color;
-						}
-					}
-				}
-			}
-		}
-		for (int i =0; i<100; i++){
-			load_led_on_offs(floor_sel);
-			delay_ms(1);
-			if (bitRead(floor_sel, 4))
-				floor_sel = 1;
-			else
-				floor_sel = floor_sel << 1;
-		}
-	}
-}
-*/
-
-
 void shape_generator(unsigned char z_gen, unsigned char y_gen, unsigned char x_gen, unsigned char shape ) {
 	unsigned char moveDown1 = x_gen-1;
 	unsigned char moveDown2 = x_gen-2;
@@ -418,44 +241,68 @@ void shape_generator(unsigned char z_gen, unsigned char y_gen, unsigned char x_g
 	}
 };
 
-void check_collide(unsigned char z_1, unsigned char y_1, unsigned char x_1, unsigned char z_0, unsigned char y_0, unsigned char x_0) {
-		if(shape_matrix[z_1][y_1][x_1] == store_matrix[z_0+1][y_0][x_0]) {
-		shape_matrix[z_1][y_1][x_1] = shape_matrix[z_1-1][y_1][x_1];
+unsigned char check_collide() {
+	unsigned char is_collide = 0;
+	for (unsigned char z=0; z<5; z++) {
+		for (unsigned char y=0; y<5; y++) {
+			for (unsigned char x=0; x<5; x++) {
+				if(shape_matrix[z][y][x] == store_matrix[z+1][y][x]) {
+					unsigned char is_collide = 1;
+				}
+			}
+		}
 	}
+	return is_collide;
 }
 
-void popFloor(unsigned char z, unsigned char y, unsigned char x) {	
+unsigned char popFloor(unsigned char z) {
+	unsigned char x = 0;
+	unsigned char y = 0;
+	unsigned char full_floor = 1;	
 	for ( y=0; y<5; y++) {
 		for ( x=0; x<5; x++) {
-			if(store_matrix[z][y][x] !=BLACK) {
-				store_matrix[z][y][x] = BLACK;
-				for ( z=0; z<5; z++){
-					for ( y=0; y<5; y++) {
-						for ( x=0; x<5; x++) {
-							store_matrix[z][y][x] = store_matrix[z-1][y][x];
-						}
-					}
+			if (store_matrix[z][y][x] == BLACK) {
+				full_floor = 0;	
+			}
+		}
+	}	
+	if(full_floor) {
+			for ( y=0; y<5; y++) {
+				for ( x=0; x<5; x++) {
+					store_matrix[z][y][x] == BLACK;
+				}
+			}
+//	if(z!=0) {
+//		unsigned char z_axis;
+//		for ( z_axis=0; z_axis<z-1; z_axis++){
+//			shape_matrix[z][y][x] = 
+//		}
+//	}	
+	
+}
+
+//moves down every x and y in store_matrix
+void move_down(unsigned char z) {
+	if(z > 0) {
+		unsigned char internal_z = 0;
+		for ( internal_z = 0; internal_z<z-1; internal_z++){
+			for ( y=0; y<5; y++) {
+				for ( x=0; x<5; x++) {
+					store_matrix[internal_z][y][x] = store_matrix[internal_z-1][y][x];
 				}
 			}
 		}
 	}
 }
 
-
 void tetrix() {
 	srand(time(0));
-	unsigned char randomY = 2;
-	unsigned char randomX = 2;
+	unsigned char setY = 2; // y axis location shape is generated
+	unsigned char setX = 2; // x axis location shape is generated
 	//unsigned char randomColor= 0;
-	//unsigned char x_1 = 1;
-	//unsigned char y_1 = 1;
-	//unsigned char z_1 = 1;
-	//unsigned char x_2 = 0;
-	//unsigned char y_2 = 0;
-	//unsigned char z_2 = 0;
-	unsigned char x = 0;
-	unsigned char y = 0;
-	unsigned char z = 0;
+	unsigned char x = 0;  // x-axis
+	unsigned char y = 0;  // y-axis
+	unsigned char z = 0;  // z-axis
 	unsigned char shape = 0;
 	for (int j=0; j<75; j++){
 		if (cntr==5){
@@ -467,8 +314,6 @@ void tetrix() {
 			//randomColor = rand()%7 + 1;
 			cntr=5;
 			cntr--;
-		//	store_matrix[z_1][y_1][x_1] = led_matrix[z][y][x] | store_matrix[z_1][y_1][x_1];
-		//	store_matrix[z_1][y_1][x_1] = BLUE;
 		} else cntr--;
 		//long color = BLACK;
 		//if(cntr == 0) color = randomColor;
@@ -481,24 +326,13 @@ void tetrix() {
 			for ( y=0; y<5; y++) {
 				for ( x=0; x<5; x++) {
 					led_matrix[z][y][x] = BLACK;
-					//store_matrix[z_1][y_1][x_1] = BLACK;
-					//led_matrix[z][y][x] = store_matrix[z][y][x];
 					shape_matrix[z][y][x] = BLACK;
 					if(z == cntr) {
 						
-						shape_generator(z, randomY, randomX, shape);
-						//led_matrix[z][y][x] = shape_matrix[z][y][x];
+						shape_generator(z, setX, setX, shape);
 						if((z==0)) {
-							//delay_ms(10);
-							//led_matrix[z][y][x] = temp_matrix[z][y][x] | store_matrix[z_1][y_1][x_1];
 							store_matrix[z][y][x] = shape_matrix[z][y][x] | store_matrix[z][y][x];
-							//led_matrix[z_2][y_2][x_2] = BLUE;
 						}
-						//led_matrix[z][y][x] = shape_matrix[z][y][x] | store_matrix[z][y][x];
-						//led_matrix[z][y][x] = BLUE;
-					//} else if(z < cntr) {
-					//	led_matrix[z][y][x] = BLACK;
-						
 					}	
 					led_matrix[z][y][x] = shape_matrix[z][y][x] | store_matrix[z][y][x];
 				}

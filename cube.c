@@ -36,11 +36,9 @@ const unsigned char bit_map[5][5][9] = {{{ 0, 0, 0,  1, 0, 0,  2, 0, 0}, { 3, 0,
 	{{12, 0, 1, 13, 0, 1, 14, 0, 1}, {15, 0, 1,  0, 1, 1,  1, 1, 1}, { 2, 1, 1,  3, 1, 1,  4, 1, 1}, { 5, 1, 1,  6, 1, 1,  7, 1, 1}, { 8, 1, 1,  9, 1, 1, 10, 1, 1}}};
 
 long MC0 = 4;
-//long MC0 = 6;
 long BCR0 = 127;
 long BCG0 = 40;
 long BCB0 = 127;
-//long MC1 = 6;
 long MC1 = 4;
 long BCR1 = 127;
 long BCG1 = 95;
@@ -202,36 +200,42 @@ void shape_generator(unsigned char z_gen, unsigned char y_gen, unsigned char x_g
 	unsigned char moveUpSide = y_gen+1;
 	//for()shape_matrix[z_gen][y_gen][x_gen] = BLACK;
 	//unsigned char moveDownSide = y_gen-1;
+	// .... shape
 	if(shape == 4) {
 		unsigned color =CYAN;
 		shape_matrix[z_gen][y_gen][x_gen] = color;
 		shape_matrix[z_gen][y_gen][moveDown1] = color;	 
 		shape_matrix[z_gen][y_gen][moveUp1] = color;	 
 		shape_matrix[z_gen][y_gen][moveDown2] = color;	 
+	// .:.	shape
 	} else if(shape == 2) {
 		unsigned color = MAGENTA;
 		shape_matrix[z_gen][y_gen][x_gen] = color;
 		shape_matrix[z_gen][y_gen][moveDown1] = color;
 		shape_matrix[z_gen][y_gen][moveUp1] = color;
 		shape_matrix[z_gen][moveUpSide][x_gen] = color;
+	// ..: shape
 	} else if(shape == 3) {
 		unsigned color = BLUE;
 		shape_matrix[z_gen][y_gen][x_gen] = color;
 		shape_matrix[z_gen][y_gen][moveDown1] = color;
 		shape_matrix[z_gen][moveUpSide][moveDown1] = color;
 		shape_matrix[z_gen][y_gen][moveUp1] = color;
+	// :.. shape
 	} else if(shape == 1) {
 		unsigned color = YELLOW;
 		shape_matrix[z_gen][y_gen][x_gen] = color;
 		shape_matrix[z_gen][y_gen][moveUp1] = color;
 		shape_matrix[z_gen][moveUpSide][moveUp1] = color;
 		shape_matrix[z_gen][y_gen][moveDown1] = color;
+	// .:* shape
 	} else if(shape == 5) {
 	unsigned color = GREEN;
 		shape_matrix[z_gen][y_gen][x_gen] = color;
 		shape_matrix[z_gen][moveUpSide][x_gen] = color;
 		shape_matrix[z_gen][moveUpSide][moveUp1] = color;
 		shape_matrix[z_gen][y_gen][moveDown1] = color;
+	// *:. shape
 	} else if(shape == 6) {
 		unsigned color = RED;
 		shape_matrix[z_gen][y_gen][x_gen] = color;
@@ -303,16 +307,16 @@ void tetrix() {
 	unsigned char x = 0;  // x-axis
 	unsigned char y = 0;  // y-axis
 	unsigned char z = 0;  // z-axis
-	unsigned char shape = 0;
+	unsigned char shape = 0; // Determines shape generated. Inputed into shape_generator function
 	for (int j=0; j<75; j++){
 		if (cntr==5){
 			cntr--;
 		} else if (cntr==0){
-			shape = rand()%6+1;
+			shape = rand()%6+1; // random number for random shape to generate
 			//randomX = rand()%2 + 2;
 			//randomY = rand()%4;
 			//randomColor = rand()%7 + 1;
-			cntr=5;
+			cntr=5; // 5 count for 5 floors
 			cntr--;
 		} else cntr--;
 		//long color = BLACK;
@@ -325,11 +329,11 @@ void tetrix() {
 		for ( z=0; z<5; z++){
 			for ( y=0; y<5; y++) {
 				for ( x=0; x<5; x++) {
-					led_matrix[z][y][x] = BLACK;
+					led_matrix[z][y][x] = BLACK; // refresh LEDs
 					shape_matrix[z][y][x] = BLACK;
 					if(z == cntr) {
 						
-						shape_generator(z, setX, setX, shape);
+						shape_generator(z, setY, setX, shape);
 						if((z==0)) {
 							store_matrix[z][y][x] = shape_matrix[z][y][x] | store_matrix[z][y][x];
 						}

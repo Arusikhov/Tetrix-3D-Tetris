@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h> 
+#include <math.h>
 
 #define HIGH 1
 #define LOW 0
@@ -44,7 +45,7 @@ long BCR1 = 35;
 long BCG1 = 14;
 long BCB1 = 127;
 
-long floor_sel = 1;
+//long floor_sel = 1;
 
 int BLANK = 4;
 int LAT = 3;
@@ -57,6 +58,7 @@ unsigned short din_w[2][3] = {{0, 0, 0},
 	{0, 0, 0}};
 unsigned char cmd_nled = 1;
 unsigned char new_shape = 1;
+unsigned char position_change = 1;
 
 unsigned char led_matrix[5][5][5]= { { {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}},
 	{ {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}},
@@ -96,11 +98,11 @@ void digitalWrite(unsigned char b, unsigned char v){
 	else PORTB &= ~(1 << b);
 }
 
-void delay(int miliSec) //for 8 Mhz crystal
+void delay(int miliSec) //for 20 Mhz crystal
 {
 	int i,j;
 	for(i=0;i<miliSec;i++)
-	for(j=0;j<775;j++) {
+	for(j=0;j<16*775;j++) {
 		asm("nop");
 	}
 }
@@ -152,16 +154,6 @@ void load_ctrl_regs(){
 }
 
 void cube_init(){
-	////Serial.begin(115200);
-	//  pinMode(BLANK, OUTPUT);
-	//  digitalWrite(BLANK,LOW);
-	//  pinMode(LAT, OUTPUT);
-	//  digitalWrite(LAT,LOW);
-	//  pinMode(SOUT, OUTPUT);
-	//  digitalWrite(SOUT,LOW);
-	////  pinMode(SIN, INPUT);
-	//  pinMode(SCLK, OUTPUT);
-	//  digitalWrite(SCLK,LOW);
 	srand(time(0));
 	DDRB = 0x1D;
 	PORTB = 0xE2; // PORTB set to output, outputs init 0s
@@ -271,30 +263,16 @@ unsigned char check_collide() {
 }
 
 // if floor is full on x & y axis, pops out floor
-unsigned char popFloor(unsigned char z) {
-	unsigned char x = 0;
-	unsigned char y = 0;
-	unsigned char full_floor = 1;	
-	for ( y=0; y<5; y++) {
-		for ( x=0; x<5; x++) {
-			if (store_matrix[z][y][x] == BLACK) {
-				full_floor = 0;	
+void popFloor() {
+	for (unsigned char z=0; z<5; z++) {
+		for (unsigned char y=0; y<5; y++) {
+			for (unsigned char x=0; x<5; x++) {
+				if (z==4) store_matrix[z][y][x] = BLACK;
+				else store_matrix[z][y][x] = store_matrix[z+1][y][x];
 			}
 		}
-	}	
-	if(full_floor) {
-			for ( y=0; y<5; y++) {
-				for ( x=0; x<5; x++) {
-					store_matrix[z][y][x] = BLACK;
-				}
-			}
-//	if(z!=0) {
-//		unsigned char z_axis;
-//		for ( z_axis=0; z_axis<z-1; z_axis++){
-//			shape_matrix[z][y][x] = 
-	}	
-	return full_floor;
-}
+	}
+}	
 
 //moves down every x and y in store_matrix
 void move_down() {
@@ -334,21 +312,70 @@ void shape_to_store(){
 };
 
 unsigned char is_floor_full(){//checks if floor is full
-	unsigned char not_full = 0x00; 
-	for (unsigned char  z=0; z<5; z++){
-		for (unsigned char  y=0; y<5; y++) {
-			for (unsigned char  x=0; x<5; x++) {
-				if (shape_matrix[z][y][x] == BLACK) {
-					not_full |= 1 << z;
-				}
-			} // x iterator
-		} // y iterator
-	} //z iterator
-	return (~not_full) & 0x1f;
+	unsigned char is_full = 1; 
+	for (unsigned char  y=0; y<5; y++) {
+		for (unsigned char  x=0; x<5; x++) {
+			if (store_matrix[0][y][x] == BLACK) {
+				is_full = 0;
+			}
+		} // x iterator
+	} // y iterator
+	return is_full;
 };
 
+void move_shape(unsigned char direction) {
+	for (unsigned char z = 0; z<5; z++){
+		for (unsigned char y=0; y<5; y++) {
+			for (unsigned char x=0; x<5; x++) {
+				if (direction == 1) {
+						if (shape_matrix[z][y][x+1] != BLACK) {
+							// shape_matrix[z][y][x+1] = color;
+							// shape_matrix[z][y][x] = BLACK;
+ 							 shape_matrix[z][y][x] = shape_matrix[z][y][x+1];
+							  shape_to_store();
+						}
+					} else if (direction == 3) {
+						if (shape_matrix[z][y][x-1] != BLACK) {
+							//shape_matrix[z][y][x-1] = color;
+							//shape_matrix[z][y][x] = BLACK;
+							shape_matrix[z][y][x] = shape_matrix[z][y][x-1];
+							shape_to_store();
+						}
+					} else if (direction == 2) {
+						if (shape_matrix[z][y+1][x] != BLACK) {
+						//	shape_matrix[z][y+1][x] = color;
+						//	shape_matrix[z][y][x] = BLACK;
+							shape_matrix[z][y][x] = shape_matrix[z][y+1][x];
+							shape_to_store();
+						}
+					} else if (direction == 4) {
+						if (shape_matrix[z][y-1][x] != BLACK) {
+							shape_matrix[z][y][x] = shape_matrix[z][y-1][x];
+							shape_to_store();
 
-unsigned char tetrix() {
+						}
+					} 
+				}
+			}
+		}
+	position_change = 1;
+};
+
+	
+/*
+void Speed(unsigned char speed_value) {
+		for (int i =0; i<speed_value; i++){
+			load_led_on_offs(floor_sel);
+			delay(1);
+			if (bitRead(floor_sel, 4))
+				floor_sel = 1;
+			else
+				floor_sel = floor_sel << 1;
+		}
+}
+*/
+
+unsigned char tetrix(unsigned char gamepauser) {
 	unsigned char shpe_ok = 1;
 	unsigned char setY = 2; // y axis location shape is generated
 	unsigned char setX = 2; // x axis location shape is generated
@@ -356,46 +383,50 @@ unsigned char tetrix() {
 	unsigned char x = 0;  // x-axis
 	unsigned char y = 0;  // y-axis
 	unsigned char z = 0;  // z-axis
-	unsigned char floor_to_clear = 0;
-	unsigned char randomShape = 0; // Determines shape generated. Inputed into shape_generator function
-	if (new_shape){
-		randomShape = rand()%6 + 1;
-		randomColor = rand()%7 + 1;
-		//setX = rand()%5;
-		//setY = rand()%5;
-		if (store_matrix[4][setX][setY] == BLACK) shape_generator(4, setY, setX, randomShape, randomColor);
-		else shpe_ok = 0;
-		new_shape = 0;
-	} else {
-		if (check_collide()){
-			new_shape = 1;
-			shape_to_store();
-			if (floor_to_clear = is_floor_full()){
-				if (floor_to_clear & 1) popFloor(0);
-				else if (floor_to_clear & 2) popFloor(1);
-				else if (floor_to_clear & 4) popFloor(2);
-				else if (floor_to_clear & 8) popFloor(3);
-				else popFloor(4);
-			}
+
+//	unsigned char oldz = 0;
+//	unsigned char randomShape = 0; // Determines shape generated. Inputed into shape_generator function
+	if(!gamepauser) {
+		if (new_shape){
+//			randomShape = rand()%6 + 1;
+			randomColor = rand()%7 + 1;
+			setX = rand()%5;
+			setY = rand()%5;
+			
+			if (store_matrix[4][setX][setY] == BLACK) shape_generator(4, setY, setX, 0, randomColor);
+
+			else shpe_ok = 0;
+			new_shape = 0;
 		} else {
-			move_down();
+			if (check_collide()){
+				new_shape = 1;
+				shape_to_store();
+				if (is_floor_full()){
+					popFloor(0);
+				}
+			} else {
+				move_down();
+			}
 		}
-	}
-	
+	}	
 	for ( z=0; z<5; z++){
 		for ( y=0; y<5; y++) {
 			for ( x=0; x<5; x++) {
 				led_matrix[z][y][x] = shape_matrix[z][y][x] | store_matrix[z][y][x];
+				//if(oldz != z) {
+					//po
+				//}
+				
 			} // x iterator
 		} // y iterator
 	} //z iterator
-	for (int i =0; i<250; i++){
-		load_led_on_offs(floor_sel);
-		delay(1);
-		if (bitRead(floor_sel, 4))
+/*		for (int i =0; i<100; i++){
+			load_led_on_offs(floor_sel);
+			delay(1);
+			if (bitRead(floor_sel, 4))
 			floor_sel = 1;
-		else
+			else
 			floor_sel = floor_sel << 1;
-	}
+	}*/
 	return shpe_ok;	
 }

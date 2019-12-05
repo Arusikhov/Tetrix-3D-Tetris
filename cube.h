@@ -11,7 +11,7 @@
 unsigned char bitRead(long d, unsigned char b);
 long bitWrite(long d, unsigned char b, unsigned char v);
 void digitalWrite(unsigned char b, unsigned char v);
-void delay_ms(int miliSec);
+void delay(int miliSec);
 void shift_98_bits();
 void load_ctrl_regs();
 void cube_init();
@@ -20,6 +20,9 @@ void teq_hartutjun();
 void vert_hartutyun();
 void cube_verev_vazox();
 void cube_vazox();
-void tetrix();
+//void move_shape(unsigned char direction);
+unsigned char tetrix(unsigned char gamepauser);
+void clr_cube();
+void move_shape(unsigned char direction);
 
 #endif /* CUBE_H_ */
